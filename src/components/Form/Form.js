@@ -1,7 +1,9 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
-import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from 'react-redux';
+import { added } from 'Redux/contactsSlice';
+import { getContacts } from 'Redux/contactsSelectors';
 
 const schema = yup.object().shape({
   name: yup
@@ -23,10 +25,24 @@ const schema = yup.object().shape({
     .required(),
 });
 
-export const Forma = ({ onAddContact }) => {
-  const onSubmit = (values, { resetForm }) => {
-    onAddContact({ id: nanoid(), ...values });
-    resetForm();
+const Forma = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  const onSubmit = newContact => {
+    const isSameContact = contacts.some(
+      ({ name, number }) =>
+        newContact.name.toLowerCase() === name.toLowerCase() ||
+        newContact.number === number
+    );
+
+    if (isSameContact) {
+      alert(`${newContact.name}: is already in contacts`);
+
+      return;
+    }
+
+    // dispatch(added({ name, number }));
   };
 
   return (
@@ -39,25 +55,21 @@ export const Forma = ({ onAddContact }) => {
         validationSchema={schema}
         onSubmit={onSubmit}
       >
-        {({ isSubmitting }) => (
-          <Form>
-            <label htmlFor="name">
-              Name
-              <Field id="name" name="name" placeholder="Name" />
-              <ErrorMessage name="name" component="div" />
-            </label>
+        <Form>
+          <label htmlFor="name">
+            Name
+            <Field id="name" name="name" placeholder="Name" />
+            <ErrorMessage name="name" component="div" />
+          </label>
 
-            <label htmlFor="number">
-              Number
-              <Field id="number" name="number" placeholder="+380100000000" />
-              <ErrorMessage name="number" component="div" />
-            </label>
+          <label htmlFor="number">
+            Number
+            <Field id="number" name="number" placeholder="+380100000000" />
+            <ErrorMessage name="number" component="div" />
+          </label>
 
-            <button type="submit" disabled={isSubmitting}>
-              Add contact
-            </button>
-          </Form>
-        )}
+          <button type="submit">Add contact</button>
+        </Form>
       </Formik>
     </div>
   );
