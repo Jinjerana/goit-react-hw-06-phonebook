@@ -1,14 +1,11 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from 'Redux/filterSlice';
-import { getFilter } from 'Redux/filterSelectors';
+import { selectFilter } from 'Redux/selectors';
 
 const Filter = () => {
-  const filter = useSelector(getFilter);
+  const filter = useSelector(selectFilter);
   const dispatch = useDispatch();
-  // const changeFilter = () => dispatch(setFilter(filter.id));
-  // const changeFilter = e => {
-  //   dispatch(setFilter(e.target.value));
 
   return (
     <div>

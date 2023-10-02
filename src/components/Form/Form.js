@@ -3,14 +3,13 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { added } from 'Redux/contactsSlice';
-import { getContacts } from 'Redux/contactsSelectors';
+import { selectVisibleContacts } from 'Redux/selectors';
 
 const schema = yup.object().shape({
   name: yup
     .string()
     .trim()
     .matches(
-      //eslint-disable-next-line
       /^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
       'Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d`Artagnan'
     )
@@ -26,7 +25,7 @@ const schema = yup.object().shape({
 });
 
 const Forma = () => {
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectVisibleContacts);
   const dispatch = useDispatch();
 
   const onSubmit = (values, actions) => {
@@ -45,6 +44,7 @@ const Forma = () => {
     }
 
     dispatch(added(name, number));
+    actions.resetForm();
   };
 
   return (
