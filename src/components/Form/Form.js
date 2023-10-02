@@ -29,20 +29,22 @@ const Forma = () => {
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
-  const onSubmit = newContact => {
+  const onSubmit = (values, actions) => {
+    const { name, number } = values;
     const isSameContact = contacts.some(
-      ({ name, number }) =>
-        newContact.name.toLowerCase() === name.toLowerCase() ||
-        newContact.number === number
+      contact =>
+        contact.name.toLowerCase() === name.toLowerCase() ||
+        contact.number === number
     );
 
     if (isSameContact) {
-      alert(`${newContact.name}: is already in contacts`);
+      alert(`${name}: is already in contacts`);
+      actions.resetForm();
 
       return;
     }
 
-    // dispatch(added({ name, number }));
+    dispatch(added(name, number));
   };
 
   return (
