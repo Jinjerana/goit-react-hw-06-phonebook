@@ -38,7 +38,7 @@ const Forma = () => {
     );
 
     if (isSameContact) {
-      alert(`${name}: is already in contacts`);
+      alert(`${name} or ${number}: is already in contacts`);
       actions.resetForm();
 
       return;
